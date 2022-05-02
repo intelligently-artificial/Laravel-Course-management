@@ -25,13 +25,14 @@ class TeacherRequest extends FormRequest
     {
         return [
             
-                'name' => 'required',
-                'course' => 'required',
-                'experience' => 'required',
+                'name' => 'required|string|max:255',
+                'course' => 'required|string',
+                'experience' => 'required|integer',
                 'gender' => 'required', 
                 'number' => 'required',
-                'email' => 'required|email',
-                'password' => 'required'
+                'email' => 'required|email|unique:Teacher',
+                'password' => 'required|min:8|max:50'
+
               ];
     }
 }

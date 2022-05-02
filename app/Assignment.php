@@ -15,4 +15,12 @@ class Assignment extends Model
         $c->save();
 
     }
+
+    public static function view($request)
+    {
+       
+
+    }
+
+
 }

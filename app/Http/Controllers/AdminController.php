@@ -9,47 +9,53 @@ use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 
 class AdminController extends Controller
 {
-    public function loginview()
-    {
-      return view('alogin');
+    public function loginview(){
+        return view('adminlogin');
     }
 
-    public function helloadmin()
-    {
-      return view('helloadmin');  
+    public function helloadmin(){
+        return view('helloadmin');  
     }
 
-    public function login(Request $request)
-    {
-        $email=$request->input('email');
-        $password=$request->input('password');
+    public function login(Request $request){
+
+        $email    = $request->input('email');
+        $password = $request->input('password');
+        
         try{    
-              $data=Admin::login($email,$password,$request);
-           }
-        catch(\Exception $exception)
-        {
+              $check=Admin::login($email,$password);
+        }catch(\Exception $exception) {
             return view('error')->with('error',$exception->getMessage());
         }
-        if(isset($data))
-        {
+
+        if(count($check)>0){
+            try{
+                $admin=Admin::all();
+            }catch(\Exception $exception) {
+                return view('error')->with('error',$exception->getMessage());
+            }
+
+            $request->session()->put('email',$email);
+            $data=compact('admin');
+         }
+
+        if(isset($data)){
           return redirect('helloadmin');
         }
-        else{echo "Wrong credentials!";}
+        else{
+            echo "Wrong credentials!";
+        }
 
-    } 
-
-    public function teacheradminview(Request $request)
-    {
+    }
+ 
+    public function teacheradminview(Request $request){
         try{    
               $data = Teacher::all();
-           }
-        catch(\Exception $exception)
-        {
+           }catch(\Exception $exception){
             return view('error')->with('error',$exception->getMessage());
         }
         $filter_data = [];
-        foreach($data as $value)
-        {
+        foreach($data as $value){
             array_push($filter_data, $value);
         }
         $count = count($filter_data);
@@ -58,6 +64,7 @@ class AdminController extends Controller
         $offset = ($page-1) * $perPage;
         $data = array_slice($filter_data, $offset, $perPage);
         $data = new Paginator($data, $count, $perPage, $page, ['path'  => $request->url(),'query' => $request->query(),]);
+
         return view('teacheradminview',['data' => $data]);
     } 
    

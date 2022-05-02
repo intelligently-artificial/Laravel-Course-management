@@ -26,11 +26,11 @@ class StudentRequest extends FormRequest
         return  
         [
             'name' => 'required|string|max:255',
-            'course' => 'required',
+            'course' => 'required|string',
             'gender' => 'required', 
-            'number' => 'required',
-            'email' => 'required|email',
-            'password' => 'required'
+            'number' => 'required|unique:Student|digits:10',
+            'email' => 'required|email|unique:Student',
+            'password' => 'required|min:8|max:50'
          
          ];
     }

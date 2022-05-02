@@ -13,12 +13,10 @@ class LoginCheck
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
-    {
-        if(session()->has('email')) 
-        return $next($request);
-
-        else
+    public function handle($request, Closure $next){
+        if(session()->has('email')){
+            return $next($request);
+        }
         return redirect('home');
     }
 }
