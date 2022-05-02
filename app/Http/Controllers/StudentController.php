@@ -127,7 +127,11 @@ class StudentController extends Controller
     }
 
     public function new(Request $request){
-        $data = Student::new();
+        try{    
+            $data = Student::new();
+        }catch(\Exception $exception){
+            return view('error')->with('error',$exception->getMessage()); 
+        }
         $filter_data = [];
         foreach($data as $row){
 
