@@ -26,12 +26,15 @@
             {echo $message;}
            @endphp 
          </span>  
-         <label> Course: </label>         
-         <input type="text" name="course" size="15"/> <br> <br>
+         <label> Course: </label>    
+          <input type="text" name="course" size="15"/> <br> <br> 
+         <span class="text-danger" >     
+                    
          @php 
             foreach($errors->get('course')as $message)
             {echo $message;}
-           @endphp    
+           @endphp 
+           </span>   
          <br>  
          <br>  
          <label>   

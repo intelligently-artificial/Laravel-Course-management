@@ -50,6 +50,7 @@
                   @endforeach  
               </tbody>
           </table>
+      
          <a href="{{url('/assignment')}}">
          <button type="button" class="btn btn-primary">Add assignment</button><br><br>
          </a>

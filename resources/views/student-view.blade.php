@@ -59,12 +59,26 @@
                       </td>
                       <td>{{$value->email}}</td>
                       <td>{{$value->password}}</td>
-                      <td><a href="{{url('/student/delete/')}}/{{$value->student_id}}"><button type="button" class="btn btn-primary">Delete</button></td></a>
-                      <td><a href="{{url('/student/edit/')}}/{{$value->student_id}}"><button type="button" class="btn btn-primary">Edit</button></td></a>
+                      <td style="background-color:#e9b0b3;">
+                            <form action="/student/delete/{{$value->student_id}}" method="POST">
+                            {{ csrf_field() }}
+                            {{ method_field('DELETE') }}
+                            <input type="hidden" name="id">
+                            <button button style="background-color:#f09797;" type="submit">Delete</button>
+                            </form></td>                      
+                            <!-- <td><a href="{{url('/student/edit/')}}/{{$value->student_id}}"><button type="button" class="btn btn-primary">Edit</button></td></a> -->
+                            <td>
+                            <form action="/student/edit/{{$value->student_id}}" method="POST">
+                            {{ csrf_field() }}
+                            {{ method_field('PUT') }}
+                            <input type="hidden" name="id">
+                            <button button style="background-color:#008CBA;" type="submit">Edit</button>
+                            </form></td>
                   </tr>
                   @endforeach 
               </tbody>
           </table>
+          <div class="row">{{$student->links()}}</div>
       </div>
   </body>
 </html>

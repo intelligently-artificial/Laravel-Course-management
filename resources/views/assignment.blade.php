@@ -27,7 +27,7 @@ Assignment Page
        @endphp 
      </span>  
      <label> Course:   </label>         
-     <input type="text" name="course"size="15"/> <br> <br> 
+     <input type="text" name="course"size="15"  value="{{$me[0]->course}}"/> <br> <br> 
      <span class="text-danger" >
        @php 
         foreach($errors->get('course')as $message)
