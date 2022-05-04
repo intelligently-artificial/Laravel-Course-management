@@ -44,7 +44,7 @@ Assignment Page
     <button type="submit" class="btn btn-primary">Submit</button>
    </button>  
   </form> 
-    <a href="{{url('/teacherpersonal-view')}}">
+    <a href="{{url('/teachers/view')}}">
     <button type="button" class="btn btn-primary">Back</button><br><br> </a>
 </div> 
 </body>  

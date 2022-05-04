@@ -7,10 +7,10 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-      <a class="nav-link active" aria-current="page" href="/helloadmin">Home</a>
+      <a class="nav-link active" aria-current="page" href="/hello/admin">Home</a>
         <a class="nav-link" href="{{route('student')}}">Student List</a>
         <a class="nav-link" href="{{route('teacher')}}">Teacher List</a>
-        <a class="nav-link active" aria-current="page" href="/adminassignment">Assignments</a>
+        <a class="nav-link active" aria-current="page" href="/admin/assignment">Assignments</a>
         <a class="nav-link active" aria-current="page" href="{{route('new')}}">All in one view</a>
         <!-- <a class="nav-link active" aria-current="page" href="viewblog.php">ViewBlogs</a>
         <a class="nav-link" href="link">ViewProfile</a> -->
