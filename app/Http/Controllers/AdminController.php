@@ -51,7 +51,7 @@ class AdminController extends Controller
  
     public function teacherAdminView(Request $request){
         try{    
-              $data = Teacher::teacherDetails();
+            $data = Teacher::teacherDetails();
            }catch(\Exception $exception){
             return view('error')->with('error',$exception->getMessage());
         }
