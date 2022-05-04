@@ -48,13 +48,14 @@ class Student extends Model
 
     public static function deleteStudent($id){
         if(!empty($id)){
-            Self::find($id)->delete();// try to return
+            $data = Self::find($id)->delete();
+            return $data;
         }
     }
 
     public static function edit($id){
         if(!empty($id)){
-            $student=Self::find($id);
+            $student = Self::find($id);
             return $student;
         }
     }

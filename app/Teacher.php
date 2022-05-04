@@ -33,20 +33,21 @@ class Teacher extends Model
 
     public static function deleteTeacher($id){
         if(!empty($id)){
-            Self::find($id)->delete();
+            $data = Self::find($id)->delete();
+            return $data;
         }  
     }
 
     public static function edit($id){
         if(!empty($id)){
-            $teacher=Self::find($id);
+            $teacher = Self::find($id);
             return $teacher;
         }
     }
 
     public static function updateTeacher($id , $name , $email , $course , $number , $gender){
         if((!empty($name)) && (!empty($email)) && (!empty($course)) && (!empty($id)) && (!empty($number)) && (!empty($gender))){
-            $register=Self::find($id);
+            $register = Self::find($id);
     
             $register->name   = $name;
             $register->email  = $email;
@@ -58,27 +59,27 @@ class Teacher extends Model
         }
     }
     public static function myStudentView(){
-        $teacher=Self::where('email',session('email'))->get();
+        $teacher = Self::where('email',session('email'))->get();
         return $teacher;
     }
 
     public static function show(){
-        $teacher=Self::where('email',session('email'))->get();
+        $teacher = Self::where('email',session('email'))->get();
         return $teacher;
     }
 
     public static function assignment(){
-        $teacher=Self::where('email',session('email'))->get();
+        $teacher = Self::where('email',session('email'))->get();
         return $teacher;
     }
 
     public static function course(){
-        $teacher=Self::where('email',session('email'))->get();
+        $teacher = Self::where('email',session('email'))->get();
         return $teacher;
     }
 
     public static function teacherDetails(){
-        $teacher=Self::all();
+        $teacher = Self::all();
         return $teacher;
     }
 
