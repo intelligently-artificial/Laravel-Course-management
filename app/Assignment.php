@@ -8,23 +8,23 @@ class Assignment extends Model
 
     public static function assign($name , $assignment , $course){
         if(!empty($name) && (!empty($assignment)) && (!empty($course))){
-            $assign=new Assignment;
+            $assign = new Assignment;
 
-            $assign->name          = $name;
-            $assign->course        = $course;
-            $assign->assignment    = $assignment;
+            $assign->name       = $name;
+            $assign->course     = $course;
+            $assign->assignment = $assignment;
 
             return $assign->save();
         }
     }
 
     public static function assignmentDetails(){
-        $assignment=Self::all();
+        $assignment = Self::all();
         return $assignment;
     }
 
     public static function pagination(){
-        $assignment=Self::paginate(10);
+        $assignment = Self::paginate(10);
         return $assignment;
     }
 }

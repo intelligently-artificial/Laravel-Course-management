@@ -12,7 +12,7 @@ class Student extends Model
         if((!empty($name)) && (!empty($email)) && (!empty($course)) && (!empty($password)) && (!empty($number)) && (!empty($gender)) && (!empty($experience))){
 
 
-            $register=new Student;
+            $register = new Student;
     
             $register->name     = $name;
             $register->course   = $course;
@@ -64,7 +64,7 @@ class Student extends Model
     public static function updateStudent($id , $name , $email , $course , $number , $gender){
         if((!empty($name)) && (!empty($email)) && (!empty($course)) && (!empty($id)) && (!empty($number)) && (!empty($gender))){
 
-            $register=Self::find($id);
+            $register = Self::find($id);
 
             $register->name   = $name;
             $register->email  = $email;
@@ -86,12 +86,12 @@ class Student extends Model
     }
 
     public static function studentDetails(){
-        $student=Self::all();
+        $student = Self::all();
         return $student;
     }
 
     public static function pagination(){
-        $student=Self::paginate(2);
+        $student = Self::paginate(2);
         return $student;
     }
 

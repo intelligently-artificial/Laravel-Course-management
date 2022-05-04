@@ -10,7 +10,7 @@ class Teacher extends Model
     public static function register($name , $course , $email , $password , $experience , $number , $gender){
         if((!empty($name)) && (!empty($email)) && (!empty($course)) && (!empty($password)) && (!empty($number)) && (!empty($gender)) && (!empty($experience))){
 
-            $register=new Teacher();
+            $register = new Teacher();
     
             $register->name       = $name;
             $register->course     = $course;
