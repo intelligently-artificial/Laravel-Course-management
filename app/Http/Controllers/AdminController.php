@@ -5,33 +5,35 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Admin;
 use App\Teacher;
+use App\Http\Requests\AdminLoginRequest;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 
 class AdminController extends Controller
 {
-    public function loginview(){
-        return view('adminlogin');
+    public function loginView(){
+        return view('adminLogin');
     }
 
-    public function helloadmin(){
-        return view('helloadmin');  
+    public function helloAdmin(){
+        return view('helloAdmin');  
     }
 
-    public function login(Request $request){
-
+    public function login(AdminLoginRequest $request){
+        $request->validate();
+        
         $email    = $request->input('email');
         $password = $request->input('password');
         
         try{    
               $check=Admin::login($email,$password);
-        }catch(\Exception $exception) {
+        }catch(\Exception $exception){
             return view('error')->with('error',$exception->getMessage());
         }
 
         if(count($check)>0){
             try{
-                $admin=Admin::all();
-            }catch(\Exception $exception) {
+                $admin=Admin::adminDetails();
+            }catch(\Exception $exception){
                 return view('error')->with('error',$exception->getMessage());
             }
 
@@ -40,17 +42,16 @@ class AdminController extends Controller
          }
 
         if(isset($data)){
-          return redirect('helloadmin');
+          return redirect('hello/admin');
         }
         else{
-            echo "Wrong credentials!";
+            return view('wrongCredentials');
         }
-
     }
  
-    public function teacheradminview(Request $request){
+    public function teacherAdminView(Request $request){
         try{    
-              $data = Teacher::all();
+              $data = Teacher::teacherDetails();
            }catch(\Exception $exception){
             return view('error')->with('error',$exception->getMessage());
         }
@@ -60,12 +61,12 @@ class AdminController extends Controller
         }
         $count = count($filter_data);
         $page = $request->page;
-        $perPage = 2;
-        $offset = ($page-1) * $perPage;
-        $data = array_slice($filter_data, $offset, $perPage);
-        $data = new Paginator($data, $count, $perPage, $page, ['path'  => $request->url(),'query' => $request->query(),]);
+        $limit = 2;
+        $offset = ($page-1) * $limit;
+        $data = array_slice($filter_data, $offset, $limit);
+        $data = new Paginator($data, $count, $limit, $page, ['path'  => $request->url(),'query' => $request->query(),]);
 
-        return view('teacheradminview',['data' => $data]);
+        return view('teacherAdminView',['data' => $data]);
     } 
    
 }

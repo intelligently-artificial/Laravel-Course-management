@@ -6,11 +6,12 @@ use Illuminate\Http\Request;
 use App\Teacher;
 use App\Student;
 use App\Http\Requests\TeacherRequest;
+use App\Http\Requests\TeacherLoginRequest;
 
 class TeacherController extends Controller
 {
     public function create(){ 
-        return view('teacherregistration');
+        return view('teacherRegistration');
     }
 
     public function store(TeacherRequest $request){
@@ -25,68 +26,76 @@ class TeacherController extends Controller
         $gender     = $request->input('gender');
 
         try{    
-            Teacher::register($name,$course,$email,$password,$experience,$number,$gender);
+            Teacher::register($name , $course , $email , $password , $experience , $number , $gender);
         }catch(\Exception $exception){
             return view('error')->with('error',$exception->getMessage());
         }
 
-        return view('tlogin');   
+        return view('teacherLogin');   
     }
 
-    public function loginview(){
-        return view('tlogin');
+    public function loginView(){
+        return view('teacherLogin');
     }
     
-    public function login(Request $request){
+    public function login(TeacherLoginRequest $request){
+        $request->validate();
+
         $email    = $request->input('email');
         $password = $request->input('password');
 
         try{    
-            $check=Teacher::login($email,$password);
+            $check=Teacher::login($email , $password);
         }catch(\Exception $exception){
             return view('error')->with('error',$exception->getMessage());
         }
 
         if(count($check)>0){
-            $teacher=Teacher::all();
+            try{ 
+                $teacher = Teacher::teacherDetails();
+        }catch(\Exception $exception){
+                return view('error')->with('error',$exception->getMessage());
+        }
+
             $request->session()->put('email',$email);
-            $data=compact('teacher'); 
+            $data=compact('teacher');
         }
 
         if(isset($data)){
-            return redirect('teacherpersonal-view')->with($data);
+            return view('teacherView')->with($data);
         }   
         else{
-            echo "Wrong credentials!";
+            return view('wrongCredentials');
         }  
     } 
 
     public function show(){  
         try{   
-            $teacher = Teacher::all();
+            $teacher = Teacher::teacherDetails();
             $me=Teacher::show();
         }catch(\Exception $exception){
             return view('error')->with('error',$exception->getMessage());
         }
         $data=compact('teacher','me');
 
-        return view('teacherpersonal-view')->with($data);        
+        return view('teacherView')->with($data);        
     }
 
-    public function mystudentsview(){
+    public function myStudentsView(){
         try{    
-            $student = Student::all();
-            $me=Teacher::mystudentview();     
+            $student = Student::studentDetails();
+            $me=Teacher::myStudentView();     
         }catch(\Exception $exception){
             return view('error')->with('error',$exception->getMessage());
         }
-        return view('teacherstudentview',compact('student','me'));
+        
+        return view('teacherStudentView',compact('student','me'));
     }
 
     public function destroy($id){
         if(!empty($id)){
             try{
-                Teacher::deleteteacher($id);
+                Teacher::deleteTeacher($id);
             }catch(\Exception $exception){
                 return view('error')->with('error',$exception->getMessage());
             }
@@ -97,7 +106,7 @@ class TeacherController extends Controller
     public function edit($id){
         if(!empty($id)){
             try{
-                $teacher=Teacher::edit($id);
+                $teacher = Teacher::edit($id);
             }catch(\Exception $exception){
                 return view('error')->with('error',$exception->getMessage());
             }
@@ -105,7 +114,7 @@ class TeacherController extends Controller
         $url=url('/teacher/update') ."/". $id ;
         $data=compact('teacher','url');
 
-        return view('teacherupdation')->with($data);   
+        return view('teacherUpdation')->with($data);   
     }
 
     public function update($id,Request $request){
@@ -117,12 +126,12 @@ class TeacherController extends Controller
             $number = $request->input('number');
             $gender = $request->input('gender');
             try{
-                Teacher::updates($id,$name,$email,$course,$number,$gender);
+                Teacher::updateTeacher($id , $name , $email , $course , $number , $gender);
             }catch(\Exception $exception){
                 return view('error')->with('error',$exception->getMessage());
             }
         }
-        return redirect('/teacheradminview');
+        return redirect('/teacher/admin/view');
     }
     
 }

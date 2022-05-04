@@ -9,24 +9,28 @@ use App\Teacher;
 class AssignmentController extends Controller
 {
     public function index(){
-        if(session()->has('email'))
-        {
-           $me=Teacher::course();
-           $data=compact('me'); 
-           return view('assignment')->with($data);
+        if(session()->has('email')){
+            $me=Teacher::course();
+            $data=compact('me'); 
+
+            return view('assignment')->with($data);
         }
-        return view('tlogin');
+        return view('teacherLogin');
     }
 
     public function assign(Request $request){
-        $request->validate([
+        $request->validate(
+            [
                'name' => 'required',
-               'assignment' => 'required',
-               'course' => 'required'
+               'assignment' => 'required'
             ]);
 
+            $name       = $request->input('name');
+            $assignment = $request->input('assignment');
+            $course     = $request->input('course');
+
         try{ 
-            Assignment::assign($request);
+            Assignment::assign($name , $assignment , $course);
         }catch(\Exception $exception) {
             return view('error')->with('error',$exception->getMessage());
         }
@@ -36,26 +40,26 @@ class AssignmentController extends Controller
   public function view(){
         if(session()->has('email')){
            try{ 
-               $assignment = Assignment::all();
+               $assignment = Assignment::assignmentDetails();
                $me=Teacher::assignment(); 
            }catch(\Exception $exception){
                return view('error')->with('error',$exception->getMessage());
            }      
-            return view('showassignment',compact('assignment','me'));
+            return view('showAssignment',compact('assignment','me'));
         }
-        return view('tlogin');
+        return view('teacherLogin');
     }
 
-    public function adminview(){
+    public function adminView(){
         if(session()->has('email')){
             try{ 
-                $assignment = Assignment::paginate(10); 
+                $assignment = Assignment::pagination(); 
            }catch(\Exception $exception){
                return view('error')->with('error',$exception->getMessage());
            }      
             $data=compact('assignment');
-            return view('adminassignmentview')->with($data);
+            return view('adminAssignmentView')->with($data);
         }
-        return view('adminlogin');
+        return view('adminLogin');
     }
 }

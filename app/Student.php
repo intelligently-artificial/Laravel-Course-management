@@ -8,64 +8,90 @@ class Student extends Model
     protected $table="student";
     protected $primaryKey="student_id";
 
-    public static function register($name,$course,$email,$password,$number,$gender){
-        $c=new Student;
+    public static function register($name , $course , $email , $password , $number , $gender){
+        if((!empty($name)) && (!empty($email)) && (!empty($course)) && (!empty($password)) && (!empty($number)) && (!empty($gender)) && (!empty($experience))){
 
-        $c->name     = $name;
-        $c->course   = $course;
-        $c->email    = $email;
-        $c->password = $password;
-        $c->number   = $number;
-        $c->gender   = $gender;
 
-        $c->save();
+            $register=new Student;
+    
+            $register->name     = $name;
+            $register->course   = $course;
+            $register->email    = $email;
+            $register->password = $password;
+            $register->number   = $number;
+            $register->gender   = $gender;
+    
+            return $register->save();
+        }
     }
 
-    public static function checklogin($email){
-        $check=Student::where('email',$email)->get();
-        return $check;        
+    public static function checkLogin($email){
+        if(!empty($email)){
+            $check=Self::where('email',$email)->get();
+            return $check; 
+        }       
     }
 
     public static function login($email,$password){
-        $login=Student::where(['email'=>$email,'password'=>$password])->get();
-        return $login;       
+        if(!empty($email) && (!empty($password))){
+            $login=Self::where(['email'=>$email,'password'=>$password])->get();
+            return $login;   
+        }    
     }
 
-    public static function studentview($search){
-        $student=Student::where('name','LIKE',"%$search%")->orwhere('email','LIKE',"%$search%")->paginate(5);
-        return $student;
+    public static function studentView($search){
+        if(!empty($search)){
+            $student=Self::where('name','LIKE',"%$search%")->orwhere('email','LIKE',"%$search%")->paginate(2);
+            return $student;
+        }
     }
 
-    public static function deletestudent($id){
-        Student::find($id)->delete();
+    public static function deleteStudent($id){
+        if(!empty($id)){
+            Self::find($id)->delete();// try to return
+        }
     }
 
     public static function edit($id){
-        $student=Student::find($id);
-        return $student;
+        if(!empty($id)){
+            $student=Self::find($id);
+            return $student;
+        }
     }
     
 
-    public static function updates($id,$name,$email,$course,$number,$gender){
-        $c=Student::find($id);
+    public static function updateStudent($id , $name , $email , $course , $number , $gender){
+        if((!empty($name)) && (!empty($email)) && (!empty($course)) && (!empty($id)) && (!empty($number)) && (!empty($gender))){
 
-        $c->name=$name;
-        $c->email=$email;
-        $c->course=$course;
-        $c->number=$number;
-        $c->gender=$gender;
+            $register=Self::find($id);
 
-        $c->save();
+            $register->name   = $name;
+            $register->email  = $email;
+            $register->course = $course;
+            $register->number = $number;
+            $register->gender = $gender;
+
+            return $register->save();
+        }
 
     }
 
     public static function new(){
-        $data=Student::join('assignment', 'student.course', '=', 'assignment.course')
+        $data=Self::select('student.email', 'teacher.name', 'assignment.assignment','student.course')
+        ->join('assignment', 'student.course', '=', 'assignment.course')
         ->join('teacher', 'teacher.course', '=', 'assignment.course')
-        ->select('student.email', 'teacher.name', 'assignment.assignment','student.course')
         ->get();
         return $data;
     }
 
+    public static function studentDetails(){
+        $student=Self::all();
+        return $student;
+    }
+
+    public static function pagination(){
+        $student=Self::paginate(2);
+        return $student;
+    }
 
 }

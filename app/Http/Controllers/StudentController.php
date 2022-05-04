@@ -7,12 +7,13 @@ use App\Student;
 use App\Teacher;
 use App\Assignment;
 use App\Http\Requests\StudentRequest;
+use App\Http\Requests\StudentLoginRequest;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 
 class StudentController extends Controller
 {
     public function create(){
-        return view('studentregistration');
+        return view('studentRegistration');
     }
 
     public function store(StudentRequest $request){
@@ -26,68 +27,77 @@ class StudentController extends Controller
         $gender   = $request->input('gender');
 
         try{ 
-            Student::register($name,$course,$email,$password,$number,$gender);
+            Student::register($name , $course , $email , $password , $number , $gender);
         }catch(\Exception $exception){
             return view('error')->with('error',$exception->getMessage());
         }
         return view('login');    
     }
 
-    public function loginview(){
+    public function loginView(){
       return view('login');
     }
     
-    public function login(Request $request){
+    public function login(StudentLoginRequest $request){
+        $request->validate();
+
         $email    = $request->input('email');
         $password = $request->input('password');
 
         try{  
-            $check = Student::login($email,$password);
+            $check = Student::login($email , $password);
         }catch(\Exception $exception){
             return view('error')->with('error',$exception->getMessage());
         }
 
         if(count($check)>0){
             try{  
-                $student=Student::checklogin($email);
+                $student=Student::checkLogin($email);
             }catch(\Exception $exception){
                 return view('error')->with('error',$exception->getMessage());
             }
             $request->session()->put('email',$email);
-            $assignment = Assignment::all();
-            $data=compact('student','assignment'); 
+            try{
+                $assignment = Assignment::assignmentDetails();
+            }catch(\Exception $exception){
+                return view('error')->with('error',$exception->getMessage());
+            }
+            $data=compact('student','assignment');
         }
 
         if(isset($data)){
-            return view('studentpersonal-view')->with($data);
+            return view('studentPersonalView')->with($data);
         }
-        else{echo "Wrong credentials!";}
+        else{
+            return view('wrongCredentials');
+        }
     } 
 
-    public function studentview(Request $request){
-        $search=$request['search']??"";
+    public function studentView(Request $request){
+        $search=$request->input('search',"");
 
         if(empty($search)){
             try{    
-                $student = Student::paginate(5);        
+                $student = Student::pagination();        
             }catch(\Exception $exception){
-             return view('error')->with('error',$exception->getMessage());
+                return view('error')->with('error',$exception->getMessage());
             }     
         }
-        
-        try{    
-               $student = Student::studentview($search);        
+        else{
+            try{    
+               $student = Student::studentView($search);        
             }catch(\Exception $exception){
-             return view('error')->with('error',$exception->getMessage());
+                return view('error')->with('error',$exception->getMessage());
             } 
+        }
          
-        return view('student-view',compact('student','search'));
+        return view('studentView',compact('student','search'));
     }
 
     public function destroy($id){
         if(!empty($id)){
             try{
-                Student::deletestudent($id);
+                Student::deleteStudent($id);
             }catch(\Exception $exception){
                 return view('error')->with('error',$exception->getMessage());
             }
@@ -106,7 +116,7 @@ class StudentController extends Controller
         $url=url('/student/update') ."/". $id ;
         $data=compact('student','url');
 
-        return view('studentupdation')->with($data);
+        return view('studentUpdation')->with($data);
     }
 
     public function update($id,Request $request){
@@ -118,7 +128,7 @@ class StudentController extends Controller
             $gender = $request->input('gender');
         
             try{    
-                Student::updates($id,$name,$email,$course,$number,$gender);
+                Student::updateStudent($id , $name , $email , $course , $number , $gender);
             }catch(\Exception $exception){
                 return view('error')->with('error',$exception->getMessage()); 
             }
@@ -139,21 +149,22 @@ class StudentController extends Controller
         }
         $count = count($filter_data);
         $page = $request->page;
-        $perPage = 10;
-        $offset = ($page-1) * $perPage;
-        $data = array_slice($filter_data, $offset, $perPage);
-        $data = new Paginator($data, $count, $perPage, $page, ['path'  => $request->url(),'query' => $request->query(),]);
+        $limit = 10;
+        $offset = ($page-1) * $limit;
+        $data = array_slice($filter_data, $offset, $limit);
+        $data = new Paginator($data, $count, $limit, $page, ['path'  => $request->url(),'query' => $request->query(),]);
         return view('new',['data' => $data]);
     }
 
-    public static function homepage(){ 
-        return view('homepage');
+    public static function homePage(){ 
+        return view('homePage');
     }
 
     public static function logout(){
         if(session()->has('email')){
             session()->flush();
         }
+
         return redirect('home');
     }
   
