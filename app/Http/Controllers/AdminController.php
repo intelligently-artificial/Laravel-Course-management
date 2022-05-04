@@ -42,7 +42,7 @@ class AdminController extends Controller
          }
 
         if(isset($data)){
-          return redirect('hello/admin');
+            return redirect('hello/admin');
         }
         else{
             return view('wrongCredentials');
@@ -59,12 +59,12 @@ class AdminController extends Controller
         foreach($data as $value){
             array_push($filter_data, $value);
         }
-        $count = count($filter_data);
-        $page = $request->page;
-        $limit = 2;
+        $count  = count($filter_data);
+        $page   = $request->page;
+        $limit  = 2;
         $offset = ($page-1) * $limit;
-        $data = array_slice($filter_data, $offset, $limit);
-        $data = new Paginator($data, $count, $limit, $page, ['path'  => $request->url(),'query' => $request->query(),]);
+        $data   = array_slice($filter_data, $offset, $limit);
+        $data   = new Paginator($data, $count, $limit, $page, ['path'  => $request->url(),'query' => $request->query(),]);
 
         return view('teacherAdminView',['data' => $data]);
     } 
