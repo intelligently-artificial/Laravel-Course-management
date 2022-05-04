@@ -77,7 +77,7 @@ class Student extends Model
 
     }
 
-    public static function new(){
+    public static function forApi(){
         $data=Self::select('student.email', 'teacher.name', 'assignment.assignment','student.course')
         ->join('assignment', 'student.course', '=', 'assignment.course')
         ->join('teacher', 'teacher.course', '=', 'assignment.course')

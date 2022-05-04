@@ -25,7 +25,7 @@ class AdminController extends Controller
         $password = $request->input('password');
         
         try{    
-              $check=Admin::login($email,$password);
+            $check=Admin::login($email,$password);
         }catch(\Exception $exception){
             return view('error')->with('error',$exception->getMessage());
         }
@@ -52,7 +52,7 @@ class AdminController extends Controller
     public function teacherAdminView(Request $request){
         try{    
             $data = Teacher::teacherDetails();
-           }catch(\Exception $exception){
+        }catch(\Exception $exception){
             return view('error')->with('error',$exception->getMessage());
         }
         $filter_data = [];

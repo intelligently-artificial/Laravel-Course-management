@@ -52,7 +52,7 @@ class StudentController extends Controller
 
         if(count($check)>0){
             try{  
-                $student=Student::checkLogin($email);
+                $student = Student::checkLogin($email);
             }catch(\Exception $exception){
                 return view('error')->with('error',$exception->getMessage());
             }
@@ -136,23 +136,23 @@ class StudentController extends Controller
         return redirect('/student/view');
     }
 
-    public function new(Request $request){
+    public function forApi(Request $request){
         try{    
-            $data = Student::new();
+            $data = Student::forApi();
         }catch(\Exception $exception){
             return view('error')->with('error',$exception->getMessage()); 
         }
         $filter_data = [];
         foreach($data as $row){
-
             array_push($filter_data, $row);
         }
-        $count = count($filter_data);
-        $page = $request->page;
-        $limit = 10;
+        $count  = count($filter_data);
+        $page   = $request->page;
+        $limit  = 10;
         $offset = ($page-1) * $limit;
-        $data = array_slice($filter_data, $offset, $limit);
-        $data = new Paginator($data, $count, $limit, $page, ['path'  => $request->url(),'query' => $request->query(),]);
+        $data   = array_slice($filter_data, $offset, $limit);
+        $data   = new Paginator($data, $count, $limit, $page, ['path'  => $request->url(),'query' => $request->query(),]);
+
         return view('new',['data' => $data]);
     }
 
